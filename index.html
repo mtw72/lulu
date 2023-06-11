@@ -6,23 +6,13 @@
     <style>
         table {
             border-collapse: collapse;
-            /* table-layout: fixed; */
-            /* width: 100%; */
             border: 1px solid #ddd;
+            position: relative;
         }
 
         .weather-icon {
             width: 50px;
             height: 50px;
-        }
-
-        th {
-            text-align: right;
-            position: sticky;
-            background-color: white;
-            left:0;
-            border-right: 1px solid #ddd;
-            padding-right: 10px;
         }
 
         td {
@@ -33,14 +23,14 @@
             border-left: 1px solid #ddd;
         }
 
-        tr.aqi button {
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
+        span {
+            position: absolute;
+            display: block;
         }
 
-        tr.aqi td {
-            width: 50px;
+        tr#humidityCell td {
+            padding-top: 5px;
+            padding-bottom: 20px;
         }
 
         .aqi-good {
@@ -62,40 +52,38 @@
         .aqi-very-poor {
             background-color: #8f3f97;
         }
+
     </style>
 </head>
 
 <body>
     <h1>Weather and Air Pollution Forecast for Liverpool</h1>
-    <div style="overflow-x:auto;">
+    <div style="overflow-x:auto; max-width: 70%;">
         <table id="weatherTable">
+            <span style="top: 235px;">Temperature (°C)</span>
+            <span style="top: 295px;">Wind Speed (m/s)</span>
+            <span style="top: 355px;">Humidity (%)</span>
+            <span style="top: 415px;">Air Quality Index</span>
             <tbody>
                 <tr id="dayDateCell">
-                    <th>Day&nbsp;and&nbsp;Date</th>
                     <td id="currentDayDateCell"></td>
                 </tr>
-                <tr id="timeCell">
-                    <th>Time</th>
+                <tr id="timeCell" style="border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;">
                     <td id="currentTimeCell"></td>
                 </tr>
-                <tr id="weatherCell">
-                    <th>Weather</th>
+                <tr id="weatherCell" style="height: 60px;">
                     <td id="currentWeatherCell"></td>
                 </tr>
-                <tr id="temperatureCell">
-                    <th>Temperature&nbsp;(°C)</th>
+                <tr id="temperatureCell" style="height: 60px;">
                     <td id="currentTemperatureCell"></td>
                 </tr>
-                <tr id="windSpeedCell">
-                    <th>Wind&nbsp;Speed&nbsp;(m/s)</th>
+                <tr id="windSpeedCell" style="height: 60px;">
                     <td id="currentWindSpeedCell"></td>
                 </tr>
-                <tr id="humidityCell">
-                    <th>Humidity&nbsp;(%)</th>
+                <tr id="humidityCell" style="height: 60px;">
                     <td id="currentHumidityCell"></td>
                 </tr>
-                <tr class="aqi" id="aqiCell">
-                    <th>Air&nbsp;Quality&nbsp;Index&nbsp;<button>i</button></th>
+                <tr class="aqi" id="aqiCell" style="height: 50px;">
                     <td id="currentAqiCell"></td>
                 </tr>
             </tbody>
