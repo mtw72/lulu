@@ -33,6 +33,16 @@
             padding-bottom: 20px;
         }
 
+        button{
+            position: absolute;
+            display: block;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            left: 130px;
+            z-index: 1;
+        }
+
         .aqi-good {
             background-color: #00e400;
         }
@@ -63,7 +73,7 @@
             <span style="top: 235px;">Temperature (°C)</span>
             <span style="top: 295px;">Wind Speed (m/s)</span>
             <span style="top: 355px;">Humidity (%)</span>
-            <span style="top: 415px;">Air Quality Index</span>
+            <span style="top: 415px;">Air Quality Index</span><button style="top: 415px;">i</button>
             <tbody>
                 <tr id="dayDateCell">
                     <td id="currentDayDateCell"></td>
