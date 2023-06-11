@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Weather Forecast</title>
+    <style>
+        .weather-icon {
+            width: 50px;
+            height: 50px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        td {
+            width: 55px;
+            text-align: center;
+        }
+
+        tr.aqi td {
+            width: 50px;
+        }
+
+        .aqi-good {
+            background-color: #00e400;
+        }
+
+        .aqi-fair {
+            background-color: #ffff00;
+        }
+
+        .aqi-moderate {
+            background-color: #ff7e00;
+        }
+
+        .aqi-poor {
+            background-color: #ff0000;
+        }
+
+        .aqi-very-poor {
+            background-color: #8f3f97;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Weather and Air Pollution Forecast for Liverpool</h1>
+    <div style="overflow-x:auto;">
+        <h2>Today</h2>
+        <table id="weatherTable">
+            <tbody>
+                <tr id="dayDateCell">
+                    <th>Day&nbsp;and&nbsp;Date</th>
+                    <td id="currentDayDateCell"></td>
+                </tr>
+                <tr id="timeCell">
+                    <th>Time</th>
+                    <td id="currentTimeCell"></td>
+                </tr>
+                <tr id="weatherCell">
+                    <th>Weather</th>
+                    <td id="currentWeatherCell"></td>
+                </tr>
+                <tr id="temperatureCell">
+                    <th>Temperature&nbsp;(°C)</th>
+                    <td id="currentTemperatureCell"></td>
+                </tr>
+                <tr id="windSpeedCell">
+                    <th>Wind&nbsp;Speed&nbsp;(m/s)</th>
+                    <td id="currentWindSpeedCell"></td>
+                </tr>
+                <tr id="humidityCell">
+                    <th>Humidity&nbsp;(%)</th>
+                    <td id="currentHumidityCell"></td>
+                </tr>
+                <tr class="aqi" id="aqiCell">
+                    <th>Air&nbsp;Quality&nbsp;Index</th>
+                    <td id="currentAqiCell"></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <script>
+        // Replace 'YOUR_API_KEY' with your actual API key
+        var weatherApiKey = '4bb3cfdbec2093b43b36e030c58eb3e2';
+        var city = 'Liverpool';
+
+                // Apply styling to AQI cell based on the AQI value
+                function applyAqiStyle(cell, aqi) {
+            switch (aqi) {
+                case 1:
+                    cell.className = 'aqi-good';
+                    break;
+                case 2:
+                    cell.className = 'aqi-fair';
+                    break;
+                case 3:
+                    cell.className = 'aqi-moderate';
+                    break;
+                case 4:
+                    cell.className = 'aqi-poor';
+                    break;
+                case 5:
+                    cell.className = 'aqi-very-poor';
+                    break;
+                default:
+                    cell.className = '';
+            }
+        }
+
+        // 1. Make the geocoding API request
+        var geocodingApiUrl = 'https://api.openweathermap.org/geo/1.0/direct?q=' + city + '&limit=1&appid=' + weatherApiKey;
+        fetch(geocodingApiUrl)
+            .then(response => response.json())
+            .then(geocodingData => {
+                // Check if geocoding API response contains at least one result
+                if (geocodingData.length > 0) {
+                    var latitude = geocodingData[0].lat;
+                    var longitude = geocodingData[0].lon;
+                }
+
+                // 2a. Make the current weather API request
+                var currentWeatherApiUrl = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitude + '&lon=' + longitude + '&appid=' + weatherApiKey;
+                fetch(currentWeatherApiUrl)
+                    .then(response => response.json())
+                    .then(currentWeatherData => {
+                        var currentTemperature = Math.round(currentWeatherData.main.temp - 273.15); // Convert temperature to Celsius
+                        var currentDescription = currentWeatherData.weather[0].description;
+                        var currentHumidity = currentWeatherData.main.humidity;
+                        var currentWindSpeed = currentWeatherData.wind.speed;
+                        var currentIconUrl = 'https://openweathermap.org/img/w/' + currentWeatherData.weather[0].icon + '.png';
+
+                        //2b. Display current weather data
+                        document.querySelector('#currentDayDateCell').textContent = new Date().toLocaleDateString('en-GB', {
+                            weekday: 'short',
+                            month: 'short',
+                            day: 'numeric'
+                        });
+                        document.querySelector('#currentTimeCell').textContent = new Date().toLocaleTimeString('en-GB', {
+                            hour: 'numeric',
+                            minute: 'numeric'
+                        });
+                        document.querySelector('#currentWeatherCell').innerHTML = `<img src="${currentIconUrl}" alt="${currentDescription}" class="weather-icon">`;
+                        document.querySelector('#currentTemperatureCell').textContent = currentTemperature;
+                        document.querySelector('#currentWindSpeedCell').textContent = Math.round(currentWindSpeed);
+                        document.querySelector('#currentHumidityCell').textContent = currentHumidity;
+                    })
+                    .catch(error => {
+                        console.log('An error occurred while fetching the current weather:', error);
+                    });
+
+                // 3a. Make the forecast weather API request
+                var forecastApiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + latitude + '&lon=' + longitude + '&appid=' + weatherApiKey;
+                fetch(forecastApiUrl)
+                    .then(response => response.json())
+                    .then(forecastData => {
+                        var forecastList = forecastData.list;
+                        forecastList.forEach(forecast => {
+                            var forecastDate = new Date(forecast.dt_txt);
+                            var forecastTime = forecast.dt_txt.split(' ')[1].slice(0, 5);
+
+                            // Check if forecast time is in the future, avoid getting current /past time data
+                            if (forecastDate > new Date()) {
+                                var forecastTemperature = Math.round(forecast.main.temp - 273.15); // Convert temperature to Celsius
+                                var forecastDescription = forecast.weather[0].description;
+                                var forecastHumidity = forecast.main.humidity;
+                                var forecastWindSpeed = forecast.wind.speed;
+                                var forecastIconUrl = 'https://openweathermap.org/img/w/' + forecast.weather[0].icon + '.png';
+
+                                // 3b. Create a new column for each forecast data and append it to the table
+                                // Day and Date
+                                var newDayDateColumn = document.createElement('td');
+                                newDayDateColumn.textContent = forecastDate.toLocaleDateString('en-GB', {
+                                    weekday: 'short',
+                                    month: 'short',
+                                    day: 'numeric'
+                                });
+                                document.querySelector('#dayDateCell').appendChild(newDayDateColumn);
+
+                                // Time
+                                var newTimeColumn = document.createElement('td');
+                                newTimeColumn.textContent = forecastTime;
+                                document.querySelector('#timeCell').appendChild(newTimeColumn);
+
+                                // Weather
+                                var newWeatherColumn = document.createElement('td');
+                                newWeatherColumn.innerHTML = `<img src="${forecastIconUrl}" alt="${forecastDescription}" class="weather-icon">`;
+                                document.querySelector('#weatherCell').appendChild(newWeatherColumn);
+
+                                // Temperature
+                                var newTemperatureColumn = document.createElement('td');
+                                newTemperatureColumn.textContent = forecastTemperature;
+                                document.querySelector('#temperatureCell').appendChild(newTemperatureColumn);
+
+                                // Wind Speed
+                                var newWindSpeedColumn = document.createElement('td');
+                                var integerForecastWindSpeed = Math.round(forecastWindSpeed);
+                                newWindSpeedColumn.textContent = integerForecastWindSpeed;
+                                document.querySelector('#windSpeedCell').appendChild(newWindSpeedColumn);
+
+                                // Humidity
+                                var newHumidityColumn = document.createElement('td');
+                                newHumidityColumn.textContent = forecastHumidity;
+                                document.querySelector('#humidityCell').appendChild(newHumidityColumn);
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        console.log('An error occurred while fetching the weather forecast:', error);
+                    });
+
+                // 4. Fetch & Display current AQI data
+                var aqiApiUrl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${weatherApiKey}`;
+                fetch(aqiApiUrl)
+                    .then(response => response.json())
+                    .then(aqiData => {
+                        var currentAqi = aqiData.list[0].main.aqi;
+                        document.querySelector('#currentAqiCell').textContent = currentAqi;
+                        applyAqiStyle(currentAqiCell, currentAqi);
+                    })
+                    .catch(error => {
+                        console.log('An error occurred while fetching current AQI data:', error);
+                    });
+
+                // Make the forecast AQI API request
+                var forecastAqiApiUrl = 'https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=' + latitude + '&lon=' + longitude + '&appid=' + weatherApiKey;
+                fetch(forecastAqiApiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Get the current hour
+                        var currentHour = new Date().getHours();
+
+                        // Extract AQI values for the upcoming closest hour intervals, excluding the current hour if it matches the current time
+                        var aqiList = data.list.filter(aqiData => {
+                            var timestamp = aqiData.dt;
+                            var date = new Date(timestamp * 1000);
+                            var hour = date.getHours();
+                            var isTodayCurrentHour = date.getDate() === new Date().getDate() && hour === currentHour;
+
+                            // Exclude the current hour data for today if it matches the current time
+                            return !isTodayCurrentHour;
+                        });
+
+                        // Filter the aqiList to only include data for the 3-hour interval (0000, 0300, 0600, etc.)
+                        aqiList = aqiList.filter(aqiData => {
+                            var timestamp = aqiData.dt;
+                            var date = new Date(timestamp * 1000);
+                            var hour = date.getHours();
+
+                            // Only include data for the 3-hour interval (0000, 0300, 0600, etc.)
+                            return hour % 3 === 0;
+                        });
+
+                        // Update your webpage with the AQI values
+                        var aqiListElement = document.getElementById('aqiCell');
+
+                        aqiList.forEach(aqiData => {
+                            var aqi = aqiData.main.aqi;
+
+                            // Create a new list item for each AQI value
+                            var listAqiItem = document.createElement('td');
+                            listAqiItem.textContent = `${aqi}`;
+                            applyAqiStyle(listAqiItem, aqi);
+
+                            // Append the list item to the unordered list
+                            aqiListElement.appendChild(listAqiItem);
+                        });
+                    })
+                    .catch(error => {
+                        console.log('An error occurred while fetching the AQI forecast:', error);
+                    });
+
+            })
+
+            .catch(error => {
+                console.log('An error occurred while geocoding the location:', error);
+            });
+    </script>
+</body>
+
+</html>
