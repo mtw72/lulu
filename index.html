@@ -35,12 +35,14 @@
             padding-bottom: 20px;
         }
 
-        button{
+        button {
             position: absolute;
             display: block;
             border: none;
             border-radius: 50%;
             cursor: pointer;
+            /* on mobile chrome screen */
+            /* left: 150px; */
             left: 130px;
             z-index: 1;
         }
@@ -64,15 +66,14 @@
         .aqi-very-poor {
             background-color: #8f3f97;
         }
-
     </style>
 </head>
 
 <body>
     <h1>Weather and Air Pollution Forecast for Liverpool</h1>
-    <div style="overflow-x:auto; max-width: 70%;">
+    <div style="overflow-x:auto; max-width: 70%; height: 425px;">
         <table id="weatherTable">
-            <span style="top: 235px;">Temperature (°C)</span>
+            <span style="top: 235px; left:10px;">Temperature (°C)</span>
             <span style="top: 295px;">Wind Speed (m/s)</span>
             <span style="top: 355px;">Humidity (%)</span>
             <span style="top: 415px;">Air Quality Index</span><button style="top: 415px;">i</button>
@@ -178,11 +179,39 @@
                     .then(response => response.json())
                     .then(forecastData => {
                         var forecastList = forecastData.list;
-                        forecastList.forEach(forecast => {
+
+                        var forecastCount = 0; // Initialize forecastCount variable
+                        var currentHour = new Date().getUTCHours();
+
+                        // Determine the number of sets to fetch based on the current hour
+                        var setsToFetch;
+                        if (currentHour >= 21) {        //2100-0000
+                            //if (currentHour >= 21 || currentHour < 3) {
+                            setsToFetch = 32;
+                        } else if (currentHour >= 18) { //1800-2100
+                            setsToFetch = 25;
+                        } else if (currentHour >= 15) { //1500-1800
+                            setsToFetch = 26;
+                        } else if (currentHour >= 12) { //1200-1500
+                            setsToFetch = 27;
+                        } else if (currentHour >= 9) { //0900-1200
+                            setsToFetch = 28;
+                        } else if (currentHour >= 6) { //0600-0900
+                            setsToFetch = 29;
+                        } else if (currentHour >= 3) { //0300-0600
+                            setsToFetch = 30;
+                        } else {                       //0000-0300
+                            setsToFetch = 31;
+                        }
+
+                        // Filter the forecast list to get the desired number of sets
+                        var filteredForecastList = forecastList.slice(0, setsToFetch);
+
+                        filteredForecastList.forEach(forecast => {
                             var forecastDate = new Date(forecast.dt_txt);
                             var forecastTime = forecast.dt_txt.split(' ')[1].slice(0, 5);
 
-                            // Check if forecast time is in the future, avoid getting current /past time data
+                            // Check if forecast time is in the future, avoid getting current / past time data
                             if (forecastDate > new Date()) {
                                 var forecastTemperature = Math.round(forecast.main.temp - 273.15); // Convert temperature to Celsius
                                 var forecastDescription = forecast.weather[0].description;
@@ -225,6 +254,14 @@
                                 var newHumidityColumn = document.createElement('td');
                                 newHumidityColumn.textContent = forecastHumidity;
                                 document.querySelector('#humidityCell').appendChild(newHumidityColumn);
+
+                                // Increment forecast count
+                                forecastCount++;
+
+                                // Check if forecast count reaches 4
+                                if (forecastCount >= setsToFetch) {
+                                    return; // Break the loop
+                                }
                             }
                         });
                     })
