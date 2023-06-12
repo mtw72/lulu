@@ -4,10 +4,21 @@
 <head>
     <title>Weather Forecast</title>
     <style>
+        div#weather {
+            overflow-x:auto; max-width: 70%; height: 430px;
+        }
+
         table {
             border-collapse: collapse;
             border: 1px solid #ddd;
             position: relative;
+        }
+
+        span {
+            position: absolute;
+            display: block;
+            background-color: white;
+            z-index: 1;
         }
 
         .weather-icon {
@@ -17,17 +28,10 @@
 
         td {
             height: 50px;
-            width: 55px;
+            width: 50px;
             text-align: center;
             vertical-align: center;
             border-left: 1px solid #ddd;
-        }
-
-        span {
-            position: absolute;
-            display: block;
-            background-color: white;
-            z-index: 1;
         }
 
         tr#humidityCell td {
@@ -73,16 +77,21 @@
 
 <body>
     <h1>Weather and Air Pollution Forecast for Liverpool</h1>
-    <div style="overflow-x:auto; max-width: 70%; height: 430px;">
-        <table id="weatherTable">
+    <div id="weather">
+        <div style="white-space: nowrap;">
+            <div style="display: inline-block; height: 50px; width: 156px; font-size: 20px; font-weight: bold;background-color: #ddd;">Today</div>
+            <div style="display: inline-block; height: 50px; width: 417px; font-size: 20px; font-weight: bold;background-color: #ddd;">Tomorrow</div>
+            <div style="display: inline-block; height: 50px; width: 417px; font-size: 20px; font-weight: bold;background-color: #ddd;">Day after Tomorrow</div>
+            <div style="display: inline-block; height: 50px; width: 419px; font-size: 20px; font-weight: bold; background-color: #ddd;">3 Days Later</div>
+          </div>
+              
+
+        <table>
             <span style="top: 235px; left:10px;">Temperature (°C)</span>
             <span style="top: 295px; left:10px;">Wind Speed (m/s)</span>
             <span style="top: 355px; left:10px;">Humidity (%)</span>
             <span style="top: 415px; left:10px;">Air Quality Index</span><button style="top: 415px;">i</button>
             <tbody>
-                <tr id="dayDateCell">
-                    <td id="currentDayDateCell"></td>
-                </tr>
                 <tr id="timeCell" style="border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;">
                     <td id="currentTimeCell"></td>
                 </tr>
@@ -109,7 +118,7 @@
     <script>
         // Replace 'YOUR_API_KEY' with your actual API key
         var weatherApiKey = '4bb3cfdbec2093b43b36e030c58eb3e2';
-        var city = 'Liverpool';
+        var city = 'liverpool';
 
         // Apply styling to AQI cell based on the AQI value
         function applyAqiStyle(cell, aqi) {
@@ -157,11 +166,6 @@
                         var currentIconUrl = 'https://openweathermap.org/img/w/' + currentWeatherData.weather[0].icon + '.png';
 
                         //2b. Display current weather data
-                        document.querySelector('#currentDayDateCell').textContent = new Date().toLocaleDateString('en-GB', {
-                            weekday: 'short',
-                            month: 'short',
-                            day: 'numeric'
-                        });
                         document.querySelector('#currentTimeCell').textContent = new Date().toLocaleTimeString('en-GB', {
                             hour: 'numeric',
                             minute: 'numeric'
@@ -222,15 +226,6 @@
                                 var forecastIconUrl = 'https://openweathermap.org/img/w/' + forecast.weather[0].icon + '.png';
 
                                 // 3b. Create a new column for each forecast data and append it to the table
-                                // Day and Date
-                                var newDayDateColumn = document.createElement('td');
-                                newDayDateColumn.textContent = forecastDate.toLocaleDateString('en-GB', {
-                                    weekday: 'short',
-                                    month: 'short',
-                                    day: 'numeric'
-                                });
-                                document.querySelector('#dayDateCell').appendChild(newDayDateColumn);
-
                                 // Time
                                 var newTimeColumn = document.createElement('td');
                                 newTimeColumn.textContent = forecastTime;
@@ -284,7 +279,7 @@
                         console.log('An error occurred while fetching current AQI data:', error);
                     });
 
-                // Make the forecast AQI API request
+                // 5. Make the forecast AQI API request
                 var forecastAqiApiUrl = 'https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=' + latitude + '&lon=' + longitude + '&appid=' + weatherApiKey;
                 fetch(forecastAqiApiUrl)
                     .then(response => response.json())
@@ -342,8 +337,6 @@
                     .catch(error => {
                         console.log('An error occurred while fetching the AQI forecast:', error);
                     });
-
-
             })
 
             .catch(error => {
