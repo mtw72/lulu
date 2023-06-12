@@ -5,7 +5,9 @@
     <title>Weather Forecast</title>
     <style>
         div#weather {
-            overflow-x:auto; max-width: 70%; height: 430px;
+            overflow-x: auto;
+            max-width: 100vw;
+            height: 430px;
         }
 
         table {
@@ -32,6 +34,7 @@
             text-align: center;
             vertical-align: center;
             border-left: 1px solid #ddd;
+            padding: 1px;
         }
 
         tr#humidityCell td {
@@ -72,25 +75,79 @@
         .aqi-very-poor {
             background-color: #8f3f97;
         }
+
+        .weather-date {
+            white-space: nowrap;
+        }
+
+        .weather-date .today {
+            display: inline-block;
+            height: 50px;
+            width: 156px;
+            /*before 1800*/
+            width: 104px;
+            /*before 2100*/
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #ddd;
+        }
+
+        .weather-date .tomorrow,
+        .two-days-later {
+            display: inline-block;
+            height: 50px;
+            width: 417px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #ddd;
+        }
+
+        .weather-date .three-days-later {
+            display: inline-block;
+            height: 50px;
+            width: 420.5px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #ddd;
+        }
+
+        .th-temperature {
+            top: 235px;
+            left: 10px;
+        }
+
+        .th-wind {
+            top: 295px;
+            left: 10px;
+        }
+
+        .th-humidity {
+            top: 355px;
+            left: 10px;
+        }
+
+        .th-aqi {
+            top: 415px;
+            left: 10px;
+        }
     </style>
 </head>
 
 <body>
     <h1>Weather and Air Pollution Forecast for Liverpool</h1>
     <div id="weather">
-        <div style="white-space: nowrap;">
-            <div style="display: inline-block; height: 50px; width: 156px; font-size: 20px; font-weight: bold;background-color: #ddd;">Today</div>
-            <div style="display: inline-block; height: 50px; width: 417px; font-size: 20px; font-weight: bold;background-color: #ddd;">Tomorrow</div>
-            <div style="display: inline-block; height: 50px; width: 417px; font-size: 20px; font-weight: bold;background-color: #ddd;">Day after Tomorrow</div>
-            <div style="display: inline-block; height: 50px; width: 419px; font-size: 20px; font-weight: bold; background-color: #ddd;">3 Days Later</div>
-          </div>
-              
+        <div class="weather-date">
+            <div class="today">Today</div>
+            <div class="tomorrow">Tomorrow</div>
+            <div class="two-days-later">Day after Tomorrow</div>
+            <div class="three-days-later">3 Days Later</div>
+        </div>
 
         <table>
-            <span style="top: 235px; left:10px;">Temperature (°C)</span>
-            <span style="top: 295px; left:10px;">Wind Speed (m/s)</span>
-            <span style="top: 355px; left:10px;">Humidity (%)</span>
-            <span style="top: 415px; left:10px;">Air Quality Index</span><button style="top: 415px;">i</button>
+            <span class="th-temperature">Temperature (°C)</span>
+            <span class="th-wind">Wind Speed (m/s)</span>
+            <span class="th-humidity">Humidity (%)</span>
+            <span class="th-aqi">Air Quality Index</span><button style="top: 415px;">i</button>
             <tbody>
                 <tr id="timeCell" style="border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;">
                     <td id="currentTimeCell"></td>
@@ -112,10 +169,30 @@
                 </tr>
             </tbody>
         </table>
-
     </div>
 
     <script>
+        const todayDiv = document.querySelector('.today');
+        const currentTimeOfToday = new Date().getHours();
+
+        if (currentTimeOfToday < 21) {
+            todayDiv.style.width = '104px';
+        } else if (currentTimeOfToday < 18) {
+            todayDiv.style.width = '156px';        
+        } else if (currentTimeOfToday < 15) {
+            todayDiv.style.width = '208px';
+        } else if (currentTimeOfToday < 12) {
+            todayDiv.style.width = '260px';
+        } else if (currentTimeOfToday < 9) {
+            todayDiv.style.width = '312px';
+        } else if (currentTimeOfToday < 6) {
+            todayDiv.style.width = '364px';
+        } else if (currentTimeOfToday < 3) {
+            todayDiv.style.width = '416px';
+        } else {
+            todayDiv.style.width = '52px';
+        }
+
         // Replace 'YOUR_API_KEY' with your actual API key
         var weatherApiKey = '4bb3cfdbec2093b43b36e030c58eb3e2';
         var city = 'liverpool';
