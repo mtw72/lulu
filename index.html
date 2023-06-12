@@ -45,6 +45,8 @@
             /* left: 150px; */
             left: 130px;
             z-index: 1;
+            width: 18px;
+            height: 18px;
         }
 
         .aqi-good {
@@ -301,20 +303,31 @@
                             return !isTodayCurrentHour;
                         });
 
-                        // Filter the aqiList to only include data for the 3-hour interval (0000, 0300, 0600, etc.)
-                        aqiList = aqiList.filter(aqiData => {
+                        // Filter the aqiList to only include data for the 3-hour interval (0000, 0300, 0600, etc.), excluding the last one
+                        var filteredAqiList = [];
+                        var lastIncludedHour = -1;
+
+                        aqiList.forEach(aqiData => {
                             var timestamp = aqiData.dt;
                             var date = new Date(timestamp * 1000);
                             var hour = date.getHours();
 
-                            // Only include data for the 3-hour interval (0000, 0300, 0600, etc.)
-                            return hour % 3 === 0;
+                            // Only include data for the 3-hour interval (0000, 0300, 0600, etc.), excluding the last one
+                            if (hour % 3 === 0 && hour !== lastIncludedHour) {
+                                filteredAqiList.push(aqiData);
+                                lastIncludedHour = hour;
+                            }
                         });
+
+                        // Remove the last data point from the filtered list if it exists
+                        if (filteredAqiList.length > 0) {
+                            filteredAqiList.pop();
+                        }
 
                         // Update your webpage with the AQI values
                         var aqiListElement = document.getElementById('aqiCell');
 
-                        aqiList.forEach(aqiData => {
+                        filteredAqiList.forEach(aqiData => {
                             var aqi = aqiData.main.aqi;
 
                             // Create a new list item for each AQI value
@@ -329,6 +342,7 @@
                     .catch(error => {
                         console.log('An error occurred while fetching the AQI forecast:', error);
                     });
+
 
             })
 
