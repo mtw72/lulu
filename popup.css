@@ -8,7 +8,7 @@
 /* The actual popup (appears on top) */
 .popup .popuptext {
     visibility: hidden;
-    width: 130px;
+    width: 150px;
     background-color: rgba(85, 85, 85, 0.9);
     color: #fff;
     text-align: center;
@@ -28,7 +28,7 @@ ul {
 
 li {
     text-align: left;
-    padding: 1.5px 20px;
+    padding: 1.5px 25px;
 }
 
 /* Popup arrow */
