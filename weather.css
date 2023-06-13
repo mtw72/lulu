@@ -9,6 +9,10 @@
     white-space: nowrap;
 }
 
+.weather-date h4 {
+    margin: 0;
+}
+
 .weather-date .today {
     display: inline-block;
     height: 50px;
@@ -83,7 +87,7 @@ span {
     top: 285px;
 }
 
-button {
+#explainAqi {
     position: absolute;
     display: block;
     border: none;
