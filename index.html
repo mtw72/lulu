@@ -3,151 +3,15 @@
 
 <head>
     <title>Weather Forecast</title>
-    <!-- <link rel="stylesheet" href="weather.css"> -->
+    <link rel="stylesheet" href="weather.css">
+
     <style>
-        #weather {
-            overflow-x: auto;
-            max-width: 100vw;
-            height: 430px;
-        }
 
-
-        .weather-date {
-            white-space: nowrap;
-        }
-
-        .weather-date .today {
-            display: inline-block;
-            height: 50px;
-            font-size: 20px;
-            font-weight: bold;
-            background-color: #ddd;
-        }
-
-        .weather-date .tomorrow {
-            display: inline-block;
-            height: 50px;
-            width: 419px;
-            /*before 0900*/
-            width: 417px;
-            /*after 0900*/
-            font-size: 20px;
-            font-weight: bold;
-            background-color: #ddd;
-        }
-
-        .two-days-later {
-            display: inline-block;
-            height: 50px;
-            width: 423px;
-            /*before 0900*/
-            width: 417px;
-            /*after 0900*/
-            font-size: 20px;
-            font-weight: bold;
-            background-color: #ddd;
-        }
-
-        .weather-date .three-days-later {
-            display: inline-block;
-            height: 50px;
-            width: 420.5px;
-            font-size: 20px;
-            font-weight: bold;
-            background-color: #ddd;
-        }
-
-        table {
-            border-collapse: collapse;
-            border: 1px solid #ddd;
-        }
-
-        .moving-element {
-            position: absolute;
-            /* top: 0;
-    left: 0; */
-            z-index: 100;
-        }
-
-        span {
-            position: absolute;
-            display: block;
-            background-color: white;
-            z-index: 1;
-            white-space: nowrap;
-            left: 10px;
-        }
-
-        .th-temperature {
-            top: 105px;
-        }
-
-        .th-wind {
-            top: 165px;
-        }
-
-        .th-humidity {
-            top: 225px;
-        }
-
-        .th-aqi {
-            top: 285px;
-        }
-
-        button {
-            position: absolute;
-            display: block;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            /* on mobile chrome screen */
-            /* left: 150px; */
-            left: 130px;
-            z-index: 1;
-            width: 18px;
-            height: 18px;
-            top: 285px;
-        }
-
-        .weather-icon {
-            width: 50px;
-            height: 50px;
-        }
-
-        td {
-            height: 50px;
-            width: 50px;
-            text-align: center;
-            vertical-align: center;
-            border-left: 1px solid #ddd;
-            padding: 1px;
-        }
-
-        tr#humidityCell td {
-            padding-top: 5px;
-            padding-bottom: 20px;
-        }
-
-        .aqi-good {
-            background-color: #00e400;
-        }
-
-        .aqi-fair {
-            background-color: #ffff00;
-        }
-
-        .aqi-moderate {
-            background-color: #ff7e00;
-        }
-
-        .aqi-poor {
-            background-color: #ff0000;
-        }
-
-        .aqi-very-poor {
-            background-color: #8f3f97;
-        }
     </style>
+
+    <script defer src="weatherdate.js"></script>
+    <script defer src="aqistyling.js"></script>
+
 </head>
 
 <body>
@@ -202,48 +66,6 @@
     </div>
 
     <script>
-
-        // Get the date of tomorrow
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
-
-        // Format the date as a string in "ddd DD MMM YYYY" format
-        const options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
-        const tomorrowString = tomorrow.toLocaleDateString('en-GB', options).replace(',', '');
-
-        // Update the HTML content with the date of tomorrow
-        window.addEventListener('DOMContentLoaded', function () {
-            const dateElement = document.getElementById('tomorrowDate');
-            dateElement.textContent = tomorrowString;
-        });
-
-        // Get the date of 2 days later
-        const twoDaysLater = new Date(today);
-        twoDaysLater.setDate(today.getDate() + 2);
-
-        // Format the date as a string in "ddd DD MMM YYYY" format
-        const twoDaysLaterString = twoDaysLater.toLocaleDateString('en-GB', options).replace(',', '');
-
-        // Update the HTML content with the date of tomorrow
-        window.addEventListener('DOMContentLoaded', function () {
-            const dateElement = document.getElementById('twoDaysLaterDate');
-            dateElement.textContent = twoDaysLaterString;
-        });
-
-        // Get the date of 3 days later
-        const threeDaysLater = new Date(today);
-        threeDaysLater.setDate(today.getDate() + 3);
-
-        // Format the date as a string in "ddd DD MMM YYYY" format
-        const threeDaysLaterString = threeDaysLater.toLocaleDateString('en-GB', options).replace(',', '');
-
-        // Update the HTML content with the date of tomorrow
-        window.addEventListener('DOMContentLoaded', function () {
-            const dateElement = document.getElementById('threeDaysLaterDate');
-            dateElement.textContent = threeDaysLaterString;
-        });
-
         // Date div
         const todayDiv = document.querySelector('.today');
         const threedayslaterDiv = document.querySelector('.three-days-later');
@@ -272,29 +94,6 @@
         // Replace 'YOUR_API_KEY' with your actual API key
         var weatherApiKey = '4bb3cfdbec2093b43b36e030c58eb3e2';
         var city = 'liverpool';
-
-        // Apply styling to AQI cell based on the AQI value
-        function applyAqiStyle(cell, aqi) {
-            switch (aqi) {
-                case 1:
-                    cell.className = 'aqi-good';
-                    break;
-                case 2:
-                    cell.className = 'aqi-fair';
-                    break;
-                case 3:
-                    cell.className = 'aqi-moderate';
-                    break;
-                case 4:
-                    cell.className = 'aqi-poor';
-                    break;
-                case 5:
-                    cell.className = 'aqi-very-poor';
-                    break;
-                default:
-                    cell.className = '';
-            }
-        }
 
         // 1. Make the geocoding API request
         var geocodingApiUrl = 'https://api.openweathermap.org/geo/1.0/direct?q=' + city + '&limit=1&appid=' + weatherApiKey;
@@ -332,7 +131,20 @@
                         console.log('An error occurred while fetching the current weather:', error);
                     });
 
-                // 3a. Make the forecast weather API request
+                // 4. Fetch & Display current AQI data
+                var aqiApiUrl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${weatherApiKey}`;
+                fetch(aqiApiUrl)
+                    .then(response => response.json())
+                    .then(aqiData => {
+                        var currentAqi = aqiData.list[0].main.aqi;
+                        document.querySelector('#currentAqiCell').textContent = currentAqi;
+                        applyAqiStyle(currentAqiCell, currentAqi);
+                    })
+                    .catch(error => {
+                        console.log('An error occurred while fetching current AQI data:', error);
+                    });
+
+                // 4a. Make the forecast weather API request
                 var forecastApiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + latitude + '&lon=' + longitude + '&appid=' + weatherApiKey;
                 fetch(forecastApiUrl)
                     .then(response => response.json())
@@ -340,27 +152,58 @@
                         var forecastList = forecastData.list;
 
                         var forecastCount = 0; // Initialize forecastCount variable
-                        var currentHour = new Date().getUTCHours() + 1;
+                        const currentHour = new Date().getHours();
 
                         // Determine the number of sets to fetch based on the current hour
                         var setsToFetch;
-                        if (currentHour >= 21) {        //2100-0000
-                            //if (currentHour >= 21 || currentHour < 3) {
-                            setsToFetch = 24;
-                        } else if (currentHour >= 18) { //1800-2100
+                        if (currentHour >= 23) {        //2300-0000
                             setsToFetch = 25;
-                        } else if (currentHour >= 15) { //1500-1800
+                        } else if (currentHour >= 22) { //2200-2300
+                            setsToFetch = 25;
+                        } else if (currentHour >= 21) { //2100-2200
+                            setsToFetch = 25;
+                        } else if (currentHour >= 20) { //2000-2100
                             setsToFetch = 26;
-                        } else if (currentHour >= 12) { //1200-1500
+                        } else if (currentHour >= 19) { //1900-2000
+                            setsToFetch = 26;
+                        } else if (currentHour >= 18) { //1800-1900
+                            setsToFetch = 26;
+                        } else if (currentHour >= 17) { //1700-1800
+                            setsToFetch = 26;
+                        } else if (currentHour >= 16) { //1600-1700
+                            setsToFetch = 26;
+                        } else if (currentHour >= 15) { //1500-1600
                             setsToFetch = 27;
-                        } else if (currentHour >= 9) { //0900-1200
+                        } else if (currentHour >= 14) { //1400-1500
                             setsToFetch = 28;
-                        } else if (currentHour >= 6) { //0600-0900
+                        } else if (currentHour >= 13) { //1300-1400
+                            setsToFetch = 28;
+                        } else if (currentHour >= 12) { //1200-1300
+                            setsToFetch = 28;
+                        } else if (currentHour >= 11) { //1100-1200
                             setsToFetch = 29;
-                        } else if (currentHour >= 3) { //0300-0600
+                        } else if (currentHour >= 10) { //1000-1100
+                            setsToFetch = 29;
+                        } else if (currentHour >= 9) { //0900-1000
+                            setsToFetch = 29;
+                        } else if (currentHour >= 8) { //0800-0900
                             setsToFetch = 30;
-                        } else {                       //0000-0300
+                        } else if (currentHour >= 7) { //0700-0800
+                            setsToFetch = 30;
+                        } else if (currentHour >= 6) { //0600-0700
+                            setsToFetch = 30;
+                        } else if (currentHour >= 5) { //0500-0600
                             setsToFetch = 31;
+                        } else if (currentHour >= 4) { //0400-0500
+                            setsToFetch = 31;
+                        } else if (currentHour >= 3) { //0300-0400
+                            setsToFetch = 31;
+                        } else if (currentHour >= 2) { //0200-0300
+                            setsToFetch = 32;
+                        } else if (currentHour >= 1) { //0100-0200
+                            setsToFetch = 32;
+                        } else {                       //0000-0100
+                            setsToFetch = 32;
                         }
 
                         // Filter the forecast list to get the desired number of sets
@@ -378,7 +221,7 @@
                                 var forecastWindSpeed = forecast.wind.speed;
                                 var forecastIconUrl = 'https://openweathermap.org/img/w/' + forecast.weather[0].icon + '.png';
 
-                                // 3b. Create a new column for each forecast data and append it to the table
+                                // 4b. Create a new column for each forecast data and append it to the table
                                 // Time
                                 var newTimeColumn = document.createElement('td');
                                 newTimeColumn.textContent = forecastTime;
@@ -419,76 +262,106 @@
                         console.log('An error occurred while fetching the weather forecast:', error);
                     });
 
-                // 4. Fetch & Display current AQI data
-                var aqiApiUrl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${weatherApiKey}`;
-                fetch(aqiApiUrl)
-                    .then(response => response.json())
-                    .then(aqiData => {
-                        var currentAqi = aqiData.list[0].main.aqi;
-                        document.querySelector('#currentAqiCell').textContent = currentAqi;
-                        applyAqiStyle(currentAqiCell, currentAqi);
-                    })
-                    .catch(error => {
-                        console.log('An error occurred while fetching current AQI data:', error);
-                    });
-
                 // 5. Make the forecast AQI API request
+                // Fetch forecast AQI data and update webpage
                 var forecastAqiApiUrl = 'https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=' + latitude + '&lon=' + longitude + '&appid=' + weatherApiKey;
                 fetch(forecastAqiApiUrl)
                     .then(response => response.json())
                     .then(data => {
                         // Get the current hour
-                        var currentHour = new Date().getHours();
+                        const currentHour = new Date().getHours();
 
-                        // Extract AQI values for the upcoming closest hour intervals, excluding the current hour if it matches the current time
-                        var aqiList = data.list.filter(aqiData => {
-                            var timestamp = aqiData.dt;
-                            var date = new Date(timestamp * 1000);
-                            var hour = date.getHours();
-                            var isTodayCurrentHour = date.getDate() === new Date().getDate() && hour === currentHour;
+                        // Extract AQI values for the upcoming closest hour intervals
+                        const forecastAqiList = data.list.filter(aqiData => {
+                            const timestamp = aqiData.dt;
+                            const date = new Date(timestamp * 1000);
+                            const hour = date.getHours();
 
-                            // Exclude the current hour data for today if it matches the current time
-                            return !isTodayCurrentHour;
+                            // Filter for the closest hour intervals (0000, 0300, 0600, 0900, 1200, 1500, 1800, 2100)
+                            return (hour >= currentHour && hour % 3 === 0) || (hour < currentHour && (hour + 3) % 3 === 0);
                         });
 
-                        // Filter the aqiList to only include data for the 3-hour interval (0000, 0300, 0600, etc.), excluding the last one
-                        var filteredAqiList = [];
-                        var lastIncludedHour = -1;
-
-                        aqiList.forEach(aqiData => {
-                            var timestamp = aqiData.dt;
-                            var date = new Date(timestamp * 1000);
-                            var hour = date.getHours();
-
-                            // Only include data for the 3-hour interval (0000, 0300, 0600, etc.), excluding the last one
-                            if (hour % 3 === 0 && hour !== lastIncludedHour) {
-                                filteredAqiList.push(aqiData);
-                                lastIncludedHour = hour;
-                            }
-                        });
-
-                        // Remove the last data point from the filtered list if it exists
-                        if (filteredAqiList.length > 0) {
-                            filteredAqiList.pop();
+                        // Determine the number of sets to fetch based on the current hour
+                        var forecastAqiCount = 0;
+                        var setsToFetch;
+                        if (currentHour >= 23) {        //2300-0000
+                            setsToFetch = 25;
+                        } else if (currentHour >= 22) { //2200-2300
+                            setsToFetch = 25;
+                        } else if (currentHour >= 21) { //2100-2200
+                            setsToFetch = 25;
+                        } else if (currentHour >= 20) { //2000-2100
+                            setsToFetch = 26;
+                        } else if (currentHour >= 19) { //1900-2000
+                            setsToFetch = 26;
+                        } else if (currentHour >= 18) { //1800-1900
+                            setsToFetch = 26;
+                        } else if (currentHour >= 17) { //1700-1800
+                            setsToFetch = 27;
+                        } else if (currentHour >= 16) { //1600-1700
+                            setsToFetch = 26;
+                        } else if (currentHour >= 15) { //1500-1600
+                            setsToFetch = 27;
+                        } else if (currentHour >= 14) { //1400-1500
+                            setsToFetch = 28;
+                        } else if (currentHour >= 13) { //1300-1400
+                            setsToFetch = 28;
+                        } else if (currentHour >= 12) { //1200-1300
+                            setsToFetch = 28;
+                        } else if (currentHour >= 11) { //1100-1200
+                            setsToFetch = 29;
+                        } else if (currentHour >= 10) { //1000-1100
+                            setsToFetch = 29;
+                        } else if (currentHour >= 9) { //0900-1000
+                            setsToFetch = 29;
+                        } else if (currentHour >= 8) { //0800-0900
+                            setsToFetch = 30;
+                        } else if (currentHour >= 7) { //0700-0800
+                            setsToFetch = 30;
+                        } else if (currentHour >= 6) { //0600-0700
+                            setsToFetch = 30;
+                        } else if (currentHour >= 5) { //0500-0600
+                            setsToFetch = 31;
+                        } else if (currentHour >= 4) { //0400-0500
+                            setsToFetch = 31;
+                        } else if (currentHour >= 3) { //0300-0400
+                            setsToFetch = 31;
+                        } else if (currentHour >= 2) { //0200-0300
+                            setsToFetch = 32;
+                        } else if (currentHour >= 1) { //0100-0200
+                            setsToFetch = 32;
+                        } else {                       //0000-0100
+                            setsToFetch = 32;
                         }
 
-                        // Update your webpage with the AQI values
-                        var aqiListElement = document.getElementById('aqiCell');
+                        // Filter the forecast AQI list to get the desired number of sets
+                        const filteredForecastAqiList = forecastAqiList.slice(0, setsToFetch);
 
-                        filteredAqiList.forEach(aqiData => {
-                            var aqi = aqiData.main.aqi;
+                        // Update the webpage with the AQI values
+                        const aqiListElement = document.getElementById('aqiCell');
 
-                            // Create a new list item for each AQI value
-                            var listAqiItem = document.createElement('td');
-                            listAqiItem.textContent = `${aqi}`;
-                            applyAqiStyle(listAqiItem, aqi);
+                        filteredForecastAqiList.forEach(aqiData => {
+                            const aqi = aqiData.main.aqi;
 
-                            // Append the list item to the unordered list
-                            aqiListElement.appendChild(listAqiItem);
+                            // Create a new table cell for each AQI value
+                            const aqiCell = document.createElement('td');
+                            aqiCell.textContent = aqi;
+                            applyAqiStyle(aqiCell, aqi);
+
+                            // Append the AQI cell to the table
+                            aqiListElement.appendChild(aqiCell);
+
+                            // Increment the forecast AQI count
+                            forecastAqiCount++;
+
+                            // Check if forecast AQI count reaches the desired sets to fetch
+                            if (forecastAqiCount >= setsToFetch) {
+                                return; // Break the loop
+                            }
                         });
                     })
                     .catch(error => {
-                        console.log('An error occurred while fetching the AQI forecast:', error);
+                        console.log('An error occurred while fetching the forecast AQI:', error);
                     });
             })
 
