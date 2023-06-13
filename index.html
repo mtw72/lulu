@@ -3,13 +3,149 @@
 
 <head>
     <title>Weather Forecast</title>
-    <link rel="stylesheet" href="weather.css">
+    <!-- <link rel="stylesheet" href="weather.css"> -->
     <style>
+        #weather {
+            overflow-x: auto;
+            max-width: 100vw;
+            height: 430px;
+        }
+
+
+        .weather-date {
+            white-space: nowrap;
+        }
+
+        .weather-date .today {
+            display: inline-block;
+            height: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #ddd;
+        }
+
+        .weather-date .tomorrow {
+            display: inline-block;
+            height: 50px;
+            width: 419px;
+            /*before 0900*/
+            width: 417px;
+            /*after 0900*/
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #ddd;
+        }
+
+        .two-days-later {
+            display: inline-block;
+            height: 50px;
+            width: 423px;
+            /*before 0900*/
+            width: 417px;
+            /*after 0900*/
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #ddd;
+        }
+
+        .weather-date .three-days-later {
+            display: inline-block;
+            height: 50px;
+            width: 420.5px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #ddd;
+        }
+
+        table {
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+        }
+
         .moving-element {
             position: absolute;
             /* top: 0;
-            left: 0; */
+    left: 0; */
             z-index: 100;
+        }
+
+        span {
+            position: absolute;
+            display: block;
+            background-color: white;
+            z-index: 1;
+            white-space: nowrap;
+            left: 10px;
+        }
+
+        .th-temperature {
+            top: 105px;
+        }
+
+        .th-wind {
+            top: 165px;
+        }
+
+        .th-humidity {
+            top: 225px;
+        }
+
+        .th-aqi {
+            top: 285px;
+        }
+
+        button {
+            position: absolute;
+            display: block;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            /* on mobile chrome screen */
+            /* left: 150px; */
+            left: 130px;
+            z-index: 1;
+            width: 18px;
+            height: 18px;
+            top: 285px;
+        }
+
+        .weather-icon {
+            width: 50px;
+            height: 50px;
+        }
+
+        td {
+            height: 50px;
+            width: 50px;
+            text-align: center;
+            vertical-align: center;
+            border-left: 1px solid #ddd;
+            padding: 1px;
+        }
+
+        tr#humidityCell td {
+            padding-top: 5px;
+            padding-bottom: 20px;
+        }
+
+        .aqi-good {
+            background-color: #00e400;
+        }
+
+        .aqi-fair {
+            background-color: #ffff00;
+        }
+
+        .aqi-moderate {
+            background-color: #ff7e00;
+        }
+
+        .aqi-poor {
+            background-color: #ff0000;
+        }
+
+        .aqi-very-poor {
+            background-color: #8f3f97;
         }
     </style>
 </head>
@@ -19,9 +155,17 @@
     <div id="weather">
         <div class="weather-date">
             <div class="today">Today</div>
-            <div class="tomorrow">Tomorrow</div>
-            <div class="two-days-later">Day after Tomorrow</div>
-            <div class="three-days-later">3 Days Later</div>
+            <div class="tomorrow">
+                <h4 style="margin: 0;" id="tomorrowDate">
+                    </h1>
+            </div>
+            <div class="two-days-later">
+                <h4 style="margin: 0;" id="twoDaysLaterDate">
+                    </h1>
+            </div>
+            <div class="three-days-later">
+                <h4 style="margin: 0;" id="threeDaysLaterDate">
+            </div>
         </div>
 
         <div class="table-container"> <!--position:??-->
@@ -58,6 +202,49 @@
     </div>
 
     <script>
+
+        // Get the date of tomorrow
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+
+        // Format the date as a string in "ddd DD MMM YYYY" format
+        const options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
+        const tomorrowString = tomorrow.toLocaleDateString('en-GB', options).replace(',', '');
+
+        // Update the HTML content with the date of tomorrow
+        window.addEventListener('DOMContentLoaded', function () {
+            const dateElement = document.getElementById('tomorrowDate');
+            dateElement.textContent = tomorrowString;
+        });
+
+        // Get the date of 2 days later
+        const twoDaysLater = new Date(today);
+        twoDaysLater.setDate(today.getDate() + 2);
+
+        // Format the date as a string in "ddd DD MMM YYYY" format
+        const twoDaysLaterString = twoDaysLater.toLocaleDateString('en-GB', options).replace(',', '');
+
+        // Update the HTML content with the date of tomorrow
+        window.addEventListener('DOMContentLoaded', function () {
+            const dateElement = document.getElementById('twoDaysLaterDate');
+            dateElement.textContent = twoDaysLaterString;
+        });
+
+        // Get the date of 3 days later
+        const threeDaysLater = new Date(today);
+        threeDaysLater.setDate(today.getDate() + 3);
+
+        // Format the date as a string in "ddd DD MMM YYYY" format
+        const threeDaysLaterString = threeDaysLater.toLocaleDateString('en-GB', options).replace(',', '');
+
+        // Update the HTML content with the date of tomorrow
+        window.addEventListener('DOMContentLoaded', function () {
+            const dateElement = document.getElementById('threeDaysLaterDate');
+            dateElement.textContent = threeDaysLaterString;
+        });
+
+        // Date div
         const todayDiv = document.querySelector('.today');
         const threedayslaterDiv = document.querySelector('.three-days-later');
         const currentTimeOfToday = new Date().getHours();
@@ -157,25 +344,23 @@
 
                         // Determine the number of sets to fetch based on the current hour
                         var setsToFetch;
-                        // if (currentHour >= 21) {        
-                        if (currentHour >= 21 || currentHour < 3) { //2100-0000
-                            setsToFetch = 23;
+                        if (currentHour >= 21) {        //2100-0000
+                            //if (currentHour >= 21 || currentHour < 3) {
+                            setsToFetch = 24;
                         } else if (currentHour >= 18) { //1800-2100
-                            setsToFetch = 17;
+                            setsToFetch = 25;
                         } else if (currentHour >= 15) { //1500-1800
-                            setsToFetch = 18;
-                        } else if (currentHour >= 13) { //1200-1500
-                            setsToFetch = 27;
+                            setsToFetch = 26;
                         } else if (currentHour >= 12) { //1200-1500
-                            setsToFetch = 29;
-                        } else if (currentHour >= 9) {  //0900-1200
+                            setsToFetch = 27;
+                        } else if (currentHour >= 9) { //0900-1200
                             setsToFetch = 28;
-                        } else if (currentHour >= 6) {  //0600-0900
-                            setsToFetch = 21;
-                        } else if (currentHour >= 3) {  //0300-0600
-                            setsToFetch = 22;
-                        } else {                        //fallback
-                            setsToFetch = 22;
+                        } else if (currentHour >= 6) { //0600-0900
+                            setsToFetch = 29;
+                        } else if (currentHour >= 3) { //0300-0600
+                            setsToFetch = 30;
+                        } else {                       //0000-0300
+                            setsToFetch = 31;
                         }
 
                         // Filter the forecast list to get the desired number of sets
