@@ -1,0 +1,138 @@
+#weather {
+    overflow-x: auto;
+    max-width: 100vw;
+    height: 430px;
+}
+
+
+.weather-date {
+    white-space: nowrap;
+}
+
+.weather-date .today {
+    display: inline-block;
+    height: 50px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #ddd;
+}
+
+.weather-date .tomorrow{
+    display: inline-block;
+    height: 50px;
+    width: 419px;/*before 0900*/
+    width: 417px;/*after 0900*/
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #ddd;
+}
+
+.two-days-later {
+    display: inline-block;
+    height: 50px;
+    width: 423px; /*before 0900*/
+    width: 417px; /*after 0900*/
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #ddd;
+}
+
+.weather-date .three-days-later {
+    display: inline-block;
+    height: 50px;
+    width: 420.5px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #ddd;
+}
+
+table {
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.moving-element {
+    position: absolute;
+    /* top: 0;
+    left: 0; */
+    z-index: 100;
+}
+
+span {
+    position: absolute;
+    display: block;
+    background-color: white;
+    z-index: 1;
+    white-space: nowrap;
+    left: 10px;
+}
+
+.th-temperature {
+    top: 105px;
+}
+
+.th-wind {
+    top: 165px;
+}
+
+.th-humidity {
+    top: 225px;
+}
+
+.th-aqi {
+    top: 285px;
+}
+
+button {
+    position: absolute;
+    display: block;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    /* on mobile chrome screen */
+    /* left: 150px; */
+    left: 130px;
+    z-index: 1;
+    width: 18px;
+    height: 18px;
+    top: 285px;
+}
+
+.weather-icon {
+    width: 50px;
+    height: 50px;
+}
+
+td {
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    vertical-align: center;
+    border-left: 1px solid #ddd;
+    padding: 1px;
+}
+
+tr#humidityCell td {
+    padding-top: 5px;
+    padding-bottom: 20px;
+}
+
+.aqi-good {
+    background-color: #00e400;
+}
+
+.aqi-fair {
+    background-color: #ffff00;
+}
+
+.aqi-moderate {
+    background-color: #ff7e00;
+}
+
+.aqi-poor {
+    background-color: #ff0000;
+}
+
+.aqi-very-poor {
+    background-color: #8f3f97;
+}
