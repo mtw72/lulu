@@ -3,132 +3,13 @@
 
 <head>
     <title>Weather Forecast</title>
+    <link rel="stylesheet" href="weather.css">
     <style>
-        div#weather {
-            overflow-x: auto;
-            max-width: 100vw;
-            height: 430px;
-        }
-
-        table {
-            border-collapse: collapse;
-            border: 1px solid #ddd;
-            position: relative;
-        }
-
-        span {
+        .moving-element {
             position: absolute;
-            display: block;
-            background-color: white;
-            z-index: 1;
-        }
-
-        .weather-icon {
-            width: 50px;
-            height: 50px;
-        }
-
-        td {
-            height: 50px;
-            width: 50px;
-            text-align: center;
-            vertical-align: center;
-            border-left: 1px solid #ddd;
-            padding: 1px;
-        }
-
-        tr#humidityCell td {
-            padding-top: 5px;
-            padding-bottom: 20px;
-        }
-
-        button {
-            position: absolute;
-            display: block;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            /* on mobile chrome screen */
-            /* left: 150px; */
-            left: 130px;
-            z-index: 1;
-            width: 18px;
-            height: 18px;
-        }
-
-        .aqi-good {
-            background-color: #00e400;
-        }
-
-        .aqi-fair {
-            background-color: #ffff00;
-        }
-
-        .aqi-moderate {
-            background-color: #ff7e00;
-        }
-
-        .aqi-poor {
-            background-color: #ff0000;
-        }
-
-        .aqi-very-poor {
-            background-color: #8f3f97;
-        }
-
-        .weather-date {
-            white-space: nowrap;
-        }
-
-        .weather-date .today {
-            display: inline-block;
-            height: 50px;
-            width: 156px;
-            /*before 1800*/
-            width: 104px;
-            /*before 2100*/
-            font-size: 20px;
-            font-weight: bold;
-            background-color: #ddd;
-        }
-
-        .weather-date .tomorrow,
-        .two-days-later {
-            display: inline-block;
-            height: 50px;
-            width: 417px;
-            font-size: 20px;
-            font-weight: bold;
-            background-color: #ddd;
-        }
-
-        .weather-date .three-days-later {
-            display: inline-block;
-            height: 50px;
-            width: 420.5px;
-            font-size: 20px;
-            font-weight: bold;
-            background-color: #ddd;
-        }
-
-        .th-temperature {
-            top: 235px;
-            left: 10px;
-        }
-
-        .th-wind {
-            top: 295px;
-            left: 10px;
-        }
-
-        .th-humidity {
-            top: 355px;
-            left: 10px;
-        }
-
-        .th-aqi {
-            top: 415px;
-            left: 10px;
+            /* top: 0;
+            left: 0; */
+            z-index: 100;
         }
     </style>
 </head>
@@ -143,52 +24,60 @@
             <div class="three-days-later">3 Days Later</div>
         </div>
 
-        <table>
-            <span class="th-temperature">Temperature (°C)</span>
-            <span class="th-wind">Wind Speed (m/s)</span>
-            <span class="th-humidity">Humidity (%)</span>
-            <span class="th-aqi">Air Quality Index</span><button style="top: 415px;">i</button>
-            <tbody>
-                <tr id="timeCell" style="border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;">
-                    <td id="currentTimeCell"></td>
-                </tr>
-                <tr id="weatherCell" style="height: 60px;">
-                    <td id="currentWeatherCell"></td>
-                </tr>
-                <tr id="temperatureCell" style="height: 60px;">
-                    <td id="currentTemperatureCell"></td>
-                </tr>
-                <tr id="windSpeedCell" style="height: 60px;">
-                    <td id="currentWindSpeedCell"></td>
-                </tr>
-                <tr id="humidityCell" style="height: 60px;">
-                    <td id="currentHumidityCell"></td>
-                </tr>
-                <tr class="aqi" id="aqiCell" style="height: 50px;">
-                    <td id="currentAqiCell"></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-container"> <!--position:??-->
+            <div class="moving-element">
+                <span class="th-temperature">Temperature (°C)</span>
+                <span class="th-wind">Wind Speed (m/s)</span>
+                <span class="th-humidity">Humidity (%)</span>
+                <span class="th-aqi">Air Quality Index</span>
+                <button>i</button>
+            </div>
+            <table>
+                <tbody>
+                    <tr id="timeCell" style="border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;">
+                        <td id="currentTimeCell"></td>
+                    </tr>
+                    <tr id="weatherCell" style="height: 60px;">
+                        <td id="currentWeatherCell"></td>
+                    </tr>
+                    <tr id="temperatureCell" style="height: 60px;">
+                        <td id="currentTemperatureCell"></td>
+                    </tr>
+                    <tr id="windSpeedCell" style="height: 60px;">
+                        <td id="currentWindSpeedCell"></td>
+                    </tr>
+                    <tr id="humidityCell" style="height: 60px;">
+                        <td id="currentHumidityCell"></td>
+                    </tr>
+                    <tr class="aqi" id="aqiCell" style="height: 50px;">
+                        <td id="currentAqiCell"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
         const todayDiv = document.querySelector('.today');
+        const threedayslaterDiv = document.querySelector('.three-days-later');
         const currentTimeOfToday = new Date().getHours();
 
-        if (currentTimeOfToday < 21) {
-            todayDiv.style.width = '104px';
-        } else if (currentTimeOfToday < 18) {
-            todayDiv.style.width = '156px';        
-        } else if (currentTimeOfToday < 15) {
-            todayDiv.style.width = '208px';
-        } else if (currentTimeOfToday < 12) {
-            todayDiv.style.width = '260px';
-        } else if (currentTimeOfToday < 9) {
-            todayDiv.style.width = '312px';
+        if (currentTimeOfToday < 3) {
+            todayDiv.style.width = '420px';
+            threedayslaterDiv.style.display = 'none';
         } else if (currentTimeOfToday < 6) {
             todayDiv.style.width = '364px';
-        } else if (currentTimeOfToday < 3) {
-            todayDiv.style.width = '416px';
+            threedayslaterDiv.style.display = 'none';
+        } else if (currentTimeOfToday < 9) {
+            todayDiv.style.width = '317px';
+        } else if (currentTimeOfToday < 12) {
+            todayDiv.style.width = '262px';
+        } else if (currentTimeOfToday < 15) {
+            todayDiv.style.width = '208px';
+        } else if (currentTimeOfToday < 18) {
+            todayDiv.style.width = '156px';
+        } else if (currentTimeOfToday < 21) {
+            todayDiv.style.width = '104px';
         } else {
             todayDiv.style.width = '52px';
         }
@@ -264,27 +153,29 @@
                         var forecastList = forecastData.list;
 
                         var forecastCount = 0; // Initialize forecastCount variable
-                        var currentHour = new Date().getUTCHours();
+                        var currentHour = new Date().getUTCHours() + 1;
 
                         // Determine the number of sets to fetch based on the current hour
                         var setsToFetch;
-                        if (currentHour >= 21) {        //2100-0000
-                            //if (currentHour >= 21 || currentHour < 3) {
-                            setsToFetch = 32;
+                        // if (currentHour >= 21) {        
+                        if (currentHour >= 21 || currentHour < 3) { //2100-0000
+                            setsToFetch = 23;
                         } else if (currentHour >= 18) { //1800-2100
-                            setsToFetch = 25;
+                            setsToFetch = 17;
                         } else if (currentHour >= 15) { //1500-1800
-                            setsToFetch = 26;
-                        } else if (currentHour >= 12) { //1200-1500
+                            setsToFetch = 18;
+                        } else if (currentHour >= 13) { //1200-1500
                             setsToFetch = 27;
-                        } else if (currentHour >= 9) { //0900-1200
-                            setsToFetch = 28;
-                        } else if (currentHour >= 6) { //0600-0900
+                        } else if (currentHour >= 12) { //1200-1500
                             setsToFetch = 29;
-                        } else if (currentHour >= 3) { //0300-0600
-                            setsToFetch = 30;
-                        } else {                       //0000-0300
-                            setsToFetch = 31;
+                        } else if (currentHour >= 9) {  //0900-1200
+                            setsToFetch = 28;
+                        } else if (currentHour >= 6) {  //0600-0900
+                            setsToFetch = 21;
+                        } else if (currentHour >= 3) {  //0300-0600
+                            setsToFetch = 22;
+                        } else {                        //fallback
+                            setsToFetch = 22;
                         }
 
                         // Filter the forecast list to get the desired number of sets
