@@ -4,6 +4,7 @@
 <head>
     <title>Weather Forecast</title>
     <link rel="stylesheet" href="weather.css">
+    <link rel="stylesheet" href="popup.css">
 
     <style>
 
@@ -11,24 +12,24 @@
 
     <script defer src="weatherdate.js"></script>
     <script defer src="aqistyling.js"></script>
-
+    <script defer src="weatherdatecontainer.js"></script>
 </head>
 
 <body>
     <h1>Weather and Air Pollution Forecast for Liverpool</h1>
     <div id="weather">
         <div class="weather-date">
-            <div class="today">Today</div>
+            <div class="today">
+                <h4>Today</h4>
+            </div>
             <div class="tomorrow">
-                <h4 style="margin: 0;" id="tomorrowDate">
-                    </h1>
+                <h4 id="tomorrowDate"></h4>
             </div>
             <div class="two-days-later">
-                <h4 style="margin: 0;" id="twoDaysLaterDate">
-                    </h1>
+                <h4 id="twoDaysLaterDate"></h4>
             </div>
             <div class="three-days-later">
-                <h4 style="margin: 0;" id="threeDaysLaterDate">
+                <h4 id="threeDaysLaterDate"></h4>
             </div>
         </div>
 
@@ -38,7 +39,16 @@
                 <span class="th-wind">Wind Speed (m/s)</span>
                 <span class="th-humidity">Humidity (%)</span>
                 <span class="th-aqi">Air Quality Index</span>
-                <button>i</button>
+                <div class="popup">
+                    <button onclick="myFunction()" id="explainAqi">i</button>
+                    <ul class="popuptext" id="myPopup">
+                        <li>1 = Good</li>
+                        <li>2 = Fair</li>
+                        <li>3 = Moderate</li>
+                        <li>4 = Poor</li>
+                        <li>5 = Very Poor</li>
+                    </ul>
+                </div>
             </div>
             <table>
                 <tbody>
@@ -66,30 +76,16 @@
     </div>
 
     <script>
-        // Date div
-        const todayDiv = document.querySelector('.today');
-        const threedayslaterDiv = document.querySelector('.three-days-later');
-        const currentTimeOfToday = new Date().getHours();
 
-        if (currentTimeOfToday < 3) {
-            todayDiv.style.width = '420px';
-            threedayslaterDiv.style.display = 'none';
-        } else if (currentTimeOfToday < 6) {
-            todayDiv.style.width = '364px';
-            threedayslaterDiv.style.display = 'none';
-        } else if (currentTimeOfToday < 9) {
-            todayDiv.style.width = '317px';
-        } else if (currentTimeOfToday < 12) {
-            todayDiv.style.width = '262px';
-        } else if (currentTimeOfToday < 15) {
-            todayDiv.style.width = '208px';
-        } else if (currentTimeOfToday < 18) {
-            todayDiv.style.width = '156px';
-        } else if (currentTimeOfToday < 21) {
-            todayDiv.style.width = '104px';
-        } else {
-            todayDiv.style.width = '52px';
+        // When the user clicks on <div>, open the popup
+        function myFunction() {
+            var popup = document.getElementById("myPopup");
+            popup.classList.toggle("show");
+
+            // After 3 seconds, remove the show class from DIV
+            setTimeout(function () { popup.classList.toggle("show"); }, 3000);
         }
+
 
         // Replace 'YOUR_API_KEY' with your actual API key
         var weatherApiKey = '4bb3cfdbec2093b43b36e030c58eb3e2';
@@ -131,7 +127,7 @@
                         console.log('An error occurred while fetching the current weather:', error);
                     });
 
-                // 4. Fetch & Display current AQI data
+                // 3. Fetch & Display current AQI data
                 var aqiApiUrl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${weatherApiKey}`;
                 fetch(aqiApiUrl)
                     .then(response => response.json())
@@ -295,9 +291,9 @@
                         } else if (currentHour >= 19) { //1900-2000
                             setsToFetch = 26;
                         } else if (currentHour >= 18) { //1800-1900
-                            setsToFetch = 26;
+                            setsToFetch = 25;
                         } else if (currentHour >= 17) { //1700-1800
-                            setsToFetch = 27;
+                            setsToFetch = 26;
                         } else if (currentHour >= 16) { //1600-1700
                             setsToFetch = 26;
                         } else if (currentHour >= 15) { //1500-1600
