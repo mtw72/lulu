@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <h1>Weather and Air Pollution Forecast for Liverpool</h1>
+    <h1>Weather and Air Pollution Forecast for Liverpool</h1> <!--https://www.flaticon.com/search?word=location-->
     <div id="weather">
         <div class="weather-date">
             <div class="today">
@@ -124,6 +124,7 @@
                         document.querySelector('#currentHumidityCell').textContent = currentHumidity;
                     })
                     .catch(error => {
+                        alert('An error occurred while fetching the current weather: Data is not available at this moment.');
                         console.log('An error occurred while fetching the current weather:', error);
                     });
 
@@ -137,6 +138,7 @@
                         applyAqiStyle(currentAqiCell, currentAqi);
                     })
                     .catch(error => {
+                        alert('An error occurred while fetching current AQI data: Data is not available at this moment.');
                         console.log('An error occurred while fetching current AQI data:', error);
                     });
 
@@ -152,52 +154,22 @@
 
                         // Determine the number of sets to fetch based on the current hour
                         var setsToFetch;
-                        if (currentHour >= 23) {        //2300-0000
+                        if (currentHour >= 22) {        //2200-0000
+                            setsToFetch = 24;
+                        } else if (currentHour >= 19) { //1900-2200
                             setsToFetch = 25;
-                        } else if (currentHour >= 22) { //2200-2300
-                            setsToFetch = 25;
-                        } else if (currentHour >= 21) { //2100-2200
-                            setsToFetch = 25;
-                        } else if (currentHour >= 20) { //2000-2100
+                        } else if (currentHour >= 16) { //1600-1900
                             setsToFetch = 26;
-                        } else if (currentHour >= 19) { //1900-2000
-                            setsToFetch = 26;
-                        } else if (currentHour >= 18) { //1800-1900
-                            setsToFetch = 26;
-                        } else if (currentHour >= 17) { //1700-1800
-                            setsToFetch = 26;
-                        } else if (currentHour >= 16) { //1600-1700
-                            setsToFetch = 26;
-                        } else if (currentHour >= 15) { //1500-1600
+                        } else if (currentHour >= 13) { //1300-1600
                             setsToFetch = 27;
-                        } else if (currentHour >= 14) { //1400-1500
+                        } else if (currentHour >= 10) { //1000-1300
                             setsToFetch = 28;
-                        } else if (currentHour >= 13) { //1300-1400
-                            setsToFetch = 28;
-                        } else if (currentHour >= 12) { //1200-1300
-                            setsToFetch = 28;
-                        } else if (currentHour >= 11) { //1100-1200
+                        } else if (currentHour >= 7) { //0700-1000
                             setsToFetch = 29;
-                        } else if (currentHour >= 10) { //1000-1100
-                            setsToFetch = 29;
-                        } else if (currentHour >= 9) { //0900-1000
-                            setsToFetch = 29;
-                        } else if (currentHour >= 8) { //0800-0900
+                        } else if (currentHour >= 4) { //0400-0700
                             setsToFetch = 30;
-                        } else if (currentHour >= 7) { //0700-0800
-                            setsToFetch = 30;
-                        } else if (currentHour >= 6) { //0600-0700
-                            setsToFetch = 30;
-                        } else if (currentHour >= 5) { //0500-0600
+                        } else if (currentHour >= 1) { //0100-0400
                             setsToFetch = 31;
-                        } else if (currentHour >= 4) { //0400-0500
-                            setsToFetch = 31;
-                        } else if (currentHour >= 3) { //0300-0400
-                            setsToFetch = 31;
-                        } else if (currentHour >= 2) { //0200-0300
-                            setsToFetch = 32;
-                        } else if (currentHour >= 1) { //0100-0200
-                            setsToFetch = 32;
                         } else {                       //0000-0100
                             setsToFetch = 32;
                         }
@@ -255,6 +227,7 @@
                         });
                     })
                     .catch(error => {
+                        alert('An error occurred while fetching the weather forecast: Data is not available at this moment.');
                         console.log('An error occurred while fetching the weather forecast:', error);
                     });
 
@@ -280,54 +253,22 @@
                         // Determine the number of sets to fetch based on the current hour
                         var forecastAqiCount = 0;
                         var setsToFetch;
-                        if (currentHour >= 23) {        //2300-0000
+                        if (currentHour >= 21) {        //2100-0000
+                            setsToFetch = 24;
+                        } else if (currentHour >= 18) { //1800-2100
                             setsToFetch = 25;
-                        } else if (currentHour >= 22) { //2200-2300
-                            setsToFetch = 25;
-                        } else if (currentHour >= 21) { //2100-2200
-                            setsToFetch = 25;
-                        } else if (currentHour >= 20) { //2000-2100
+                        } else if (currentHour >= 15) { //1500-1800
                             setsToFetch = 26;
-                        } else if (currentHour >= 19) { //1900-2000
-                            setsToFetch = 26;
-                        } else if (currentHour >= 18) { //1800-1900
-                            setsToFetch = 25;
-                        } else if (currentHour >= 17) { //1700-1800
-                            setsToFetch = 26;
-                        } else if (currentHour >= 16) { //1600-1700
-                            setsToFetch = 26;
-                        } else if (currentHour >= 15) { //1500-1600
+                        } else if (currentHour >= 12) { //1200-1500
                             setsToFetch = 27;
-                        } else if (currentHour >= 14) { //1400-1500
+                        } else if (currentHour >= 9) { //0900-1200
                             setsToFetch = 28;
-                        } else if (currentHour >= 13) { //1300-1400
-                            setsToFetch = 28;
-                        } else if (currentHour >= 12) { //1200-1300
-                            setsToFetch = 28;
-                        } else if (currentHour >= 11) { //1100-1200
+                        } else if (currentHour >= 6) { //0600-0900
                             setsToFetch = 29;
-                        } else if (currentHour >= 10) { //1000-1100
-                            setsToFetch = 29;
-                        } else if (currentHour >= 9) { //0900-1000
-                            setsToFetch = 29;
-                        } else if (currentHour >= 8) { //0800-0900
+                        } else if (currentHour >= 3) { //0300-0600
                             setsToFetch = 30;
-                        } else if (currentHour >= 7) { //0700-0800
-                            setsToFetch = 30;
-                        } else if (currentHour >= 6) { //0600-0700
-                            setsToFetch = 30;
-                        } else if (currentHour >= 5) { //0500-0600
+                        } else {                       //0000-0300
                             setsToFetch = 31;
-                        } else if (currentHour >= 4) { //0400-0500
-                            setsToFetch = 31;
-                        } else if (currentHour >= 3) { //0300-0400
-                            setsToFetch = 31;
-                        } else if (currentHour >= 2) { //0200-0300
-                            setsToFetch = 32;
-                        } else if (currentHour >= 1) { //0100-0200
-                            setsToFetch = 32;
-                        } else {                       //0000-0100
-                            setsToFetch = 32;
                         }
 
                         // Filter the forecast AQI list to get the desired number of sets
@@ -357,12 +298,13 @@
                         });
                     })
                     .catch(error => {
-                        console.log('An error occurred while fetching the forecast AQI:', error);
+                        alert('An error occurred while fetching the forecast AQI: Data is not available at this moment.');
+                        console.log('An error occurred while fetching the forecast AQI: ' + error);
                     });
             })
 
             .catch(error => {
-                console.log('An error occurred while geocoding the location:', error);
+                alert('An error occurred while geocoding the location:', error);
             });
     </script>
 </body>
